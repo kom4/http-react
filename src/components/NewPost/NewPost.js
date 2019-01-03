@@ -22,7 +22,7 @@ class NewPost extends Component {
                     <option value="Max">Max</option>
                     <option value="Manu">Manu</option>
                 </select>
-                <button>Add Post</button>
+                <button onClick={() => this.props.addNewPost(this.state.title, this.state.content, this.state.author)}>Add Post</button>
             </div>
         );
     }

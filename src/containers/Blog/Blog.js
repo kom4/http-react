@@ -9,8 +9,8 @@ import './Blog.css';
 class Blog extends Component {
 
   state = {
-    posts: [],
-    fullPost: null
+    posts: [], 
+    selectedPostId: null
   }
 
   componentDidMount() {
@@ -25,20 +25,50 @@ class Blog extends Component {
   }
 
   postClicked = (id) => {
+    this.setState({selectedPostId: id});
+
+    // const posts = this.state.posts;
+    // const clickedPostId = posts.findIndex((post) => {
+    //   return post.id === id;
+    // })
+    // const clickedPost = posts[clickedPostId];        
+    // this.setState({
+    //   fullPost : clickedPost
+    // })       
+  }
+
+  postDeleteHandler = () => {
     const posts = this.state.posts;
-    const clickedPostId = posts.findIndex((post) => {
-      return post.id === id;
+    const currentPost = this.state.fullPost;
+    const currentPostId = posts.findIndex((post) => {
+      return post.id === currentPost.id;
     })
-    const clickedPost = posts[clickedPostId];        
+    posts.splice(currentPostId, 1);
     this.setState({
-      fullPost : clickedPost
-    })    
+      posts: posts,
+      fullPost: null,
+    })
+  }
+
+  addNewPost = (title, content, author) => {   
+    const newPost = {
+      title: title,
+      body: content,
+      author: author,
+      id: new Date().getTime(),
+    }  
+    const posts = this.state.posts;
+    posts.push(newPost);
+    this.setState({posts: posts})    
   }
 
     render () {
-      
-      const fullPost = this.state.fullPost !== null ? <FullPost title={this.state.fullPost.title} 
-                                                           author={this.state.fullPost.author} /> : <FullPost />
+     
+      // const fullPost = this.state.fullPost !== null ? <FullPost title={this.state.fullPost.title} 
+      //                                                           author={this.state.fullPost.author} 
+      //                                                           content={this.state.fullPost.body} 
+      //                                                           postDeleted={this.postDeleteHandler}
+      //                                                           /> : <FullPost />
       
       const posts = this.state.posts.map(post => {
         return <Post key={post.id} title={post.title} author={post.author} postClicked={() => this.postClicked(post.id)}/>
@@ -50,10 +80,10 @@ class Blog extends Component {
                   {posts}
                 </section>
                 <section>
-                  {fullPost}
+                  <FullPost id={this.state.selectedPostId} />
                 </section>
                 <section>
-                    <NewPost />
+                    <NewPost addNewPost={this.addNewPost}/>
                 </section>
             </div>
         );

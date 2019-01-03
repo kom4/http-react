@@ -2,13 +2,21 @@ import React from 'react';
 
 import './Post.css';
 
-const post = (props) => (
-    <article className="Post" onClick={props.postClicked}>
-        <h1>{props.title}</h1>
-        <div className="Info">
-            <div className="Author">{props.author}</div>
-        </div>
-    </article>
-);
+class Post extends React.Component {
 
-export default post;
+    render () {
+
+        return (
+            <article className="Post" onClick={this.props.postClicked}>
+            <h1>{this.props.title}</h1>
+            <div className="Info">
+                <div className="Author">{this.props.author}</div>
+            </div>
+        </article>
+
+        )
+    }
+
+}
+
+export default Post;
