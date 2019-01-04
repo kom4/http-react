@@ -25,50 +25,27 @@ class Blog extends Component {
   }
 
   postClicked = (id) => {
-    this.setState({selectedPostId: id});
-
-    // const posts = this.state.posts;
-    // const clickedPostId = posts.findIndex((post) => {
-    //   return post.id === id;
-    // })
-    // const clickedPost = posts[clickedPostId];        
-    // this.setState({
-    //   fullPost : clickedPost
-    // })       
+    this.setState({selectedPostId: id});    
   }
 
   postDeleteHandler = () => {
-    const posts = this.state.posts;
-    const currentPost = this.state.fullPost;
-    const currentPostId = posts.findIndex((post) => {
-      return post.id === currentPost.id;
-    })
-    posts.splice(currentPostId, 1);
-    this.setState({
-      posts: posts,
-      fullPost: null,
+    axios.delete('https://jsonplaceholder.typicode.com/posts/' + this.state.selectedPostId)
+    .then(response => {      
+      if(response.status === 200){
+        const posts = this.state.posts;
+        const inArrayId = posts.findIndex((post) => {
+          return post.id === this.state.selectedPostId;
+        })       
+        posts.splice(inArrayId, 1);        
+        this.setState({
+          posts: posts,
+          t
+        });                   
+      }      
     })
   }
 
-  addNewPost = (title, content, author) => {   
-    const newPost = {
-      title: title,
-      body: content,
-      author: author,
-      id: new Date().getTime(),
-    }  
-    const posts = this.state.posts;
-    posts.push(newPost);
-    this.setState({posts: posts})    
-  }
-
-    render () {
-     
-      // const fullPost = this.state.fullPost !== null ? <FullPost title={this.state.fullPost.title} 
-      //                                                           author={this.state.fullPost.author} 
-      //                                                           content={this.state.fullPost.body} 
-      //                                                           postDeleted={this.postDeleteHandler}
-      //                                                           /> : <FullPost />
+    render () {                                                
       
       const posts = this.state.posts.map(post => {
         return <Post key={post.id} title={post.title} author={post.author} postClicked={() => this.postClicked(post.id)}/>
@@ -80,10 +57,10 @@ class Blog extends Component {
                   {posts}
                 </section>
                 <section>
-                  <FullPost id={this.state.selectedPostId} />
+                  <FullPost id={this.state.selectedPostId} postDeleted={this.postDeleteHandler}/>
                 </section>
                 <section>
-                    <NewPost addNewPost={this.addNewPost}/>
+                    <NewPost />
                 </section>
             </div>
         );
